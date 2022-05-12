@@ -69,6 +69,7 @@ namespace luadec
                     return;
                 }
 
+
                 Directory.CreateDirectory(Path.GetDirectoryName(outfilename));
 
 #if DEBUG
@@ -97,6 +98,9 @@ namespace luadec
                 outfilename = null;
                 arg++;
             }
+
+            if (infilename == null)
+                UsageStatement();
         }
 
         private static void Decompile(string infilename, string outfilename, bool writeFile)
