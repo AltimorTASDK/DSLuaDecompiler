@@ -20,6 +20,8 @@ namespace luadec
         }
         static void Main(string[] args)
         {
+            if (args.Length == 0)
+                UsageStatement();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Console.OutputEncoding = Encoding.UTF8;
             // Super bad arg parser until I decide to use a better libary
