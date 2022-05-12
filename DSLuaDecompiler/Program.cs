@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net.Mime;
+using System.Threading.Channels;
 using luadec;
 using luadec.Utilities;
 
@@ -11,8 +13,15 @@ namespace luadec
 {
     class Program
     {
+        public static void UsageStatement()
+        {
+            Console.WriteLine("Usage: DSLuaDecompiler.exe [options] inputfile.lua\n-o outputfile.lua\n-d Print output in console");
+            Environment.Exit(0);
+        }
         static void Main(string[] args)
         {
+            if (args.Length == 0)
+                UsageStatement();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Console.OutputEncoding = Encoding.UTF8;
             // Super bad arg parser until I decide to use a better libary
@@ -24,19 +33,29 @@ namespace luadec
             {
                 try
                 {
-                    if (args[arg] == "-d")
+                    if (args[arg].ToLower() == "-d")
                     {
                         writeFile = false;
                         arg++;
                         continue;
                     }
-                    else if (args[arg] == "-o")
+                    if (args[arg].ToLower() == "-o")
                     {
                         outfilename = args[arg + 1];
                         arg += 2;
                         continue;
                     }
+                    if (args[arg].ToLower() == "-h")
+                    {
+                        outfilename = args[arg + 1];
+                        arg += 2;
+                        continue;
+                    }
+
                     infilename = args[arg];
+                    if (!File.Exists(infilename))
+                        UsageStatement();
+
                     if (outfilename == null)
                     {
                         outfilename =
@@ -46,9 +65,10 @@ namespace luadec
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Usage: DSLuaDecompiler.exe [options] inputfile.lua\n-o outputfile.lua\n-d Print output in console");
+                    UsageStatement();
                     return;
                 }
+
 
                 Directory.CreateDirectory(Path.GetDirectoryName(outfilename));
 
@@ -78,6 +98,9 @@ namespace luadec
                 outfilename = null;
                 arg++;
             }
+
+            if (infilename == null)
+                UsageStatement();
         }
 
         private static void Decompile(string infilename, string outfilename, bool writeFile)
