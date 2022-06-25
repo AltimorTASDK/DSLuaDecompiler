@@ -1022,6 +1022,30 @@ namespace luadec.IR
             Args = args;
         }
 
+        /// <summary>
+        /// Whether this is an object-oriented method call.
+        /// </summary>
+        public bool IsMethodCall
+        {
+            get => MethodReceiver != null;
+        }
+
+        /// <summary>
+        /// If this is an object-oriented method call, this is the identifier that receives the call.
+        /// </summary>
+        public Identifier MethodReceiver
+        {
+            get
+            {
+                if (Function is IdentifierReference ir && ir.TableIndices.Count == 1 && Args.Count() >= 1 &&
+                    Args[0] is IdentifierReference thisir && thisir.TableIndices.Count == 0 && thisir.Identifier == ir.Identifier)
+                {
+                    return ir.Identifier;
+                }
+                return null;
+            }
+        }
+
         public override void Parenthesize()
         {
             Function.Parenthesize();
@@ -1114,7 +1138,7 @@ namespace luadec.IR
                 ir.TableIndices[0] is Constant c && c.ConstType == Constant.ConstantType.ConstString &&
                 ir.Identifier.IType != Identifier.IdentifierType.GlobalTable)
             {
-                if (Args.Count() >= 1 && Args[0] is IdentifierReference thisir && thisir.TableIndices.Count == 0 && thisir.Identifier == ir.Identifier)
+                if (IsMethodCall)
                 {
                     ret += $@"{ir.Identifier.ToString()}:{c.String}(";
                     beginarg = 1;

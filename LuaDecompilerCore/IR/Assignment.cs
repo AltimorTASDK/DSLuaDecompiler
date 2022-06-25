@@ -61,6 +61,10 @@ namespace luadec.IR
             Left = new List<IdentifierReference>();
             Left.Add(new IdentifierReference(l));
             Right = r;
+
+            if (r == null) {
+                throw new ArgumentException("Expected r not to be null.");
+            }
         }
 
         public Assignment(IdentifierReference l, Expression r)
@@ -68,12 +72,20 @@ namespace luadec.IR
             Left = new List<IdentifierReference>();
             Left.Add(l);
             Right = r;
+
+            if (r == null) {
+                throw new ArgumentException("Expected r not to be null.");
+            }
         }
 
         public Assignment(List<IdentifierReference> l, Expression r)
         {
             Left = l;
             Right = r;
+
+            if (r == null) {
+                throw new ArgumentException("Expected r not to be null.");
+            }
         }
 
         public override void Parenthesize()

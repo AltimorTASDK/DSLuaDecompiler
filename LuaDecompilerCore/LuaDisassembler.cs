@@ -1032,8 +1032,8 @@ namespace luadec
             irfun.DetectLoopConditionals();
             irfun.DetectTwoWayConditionals();
             irfun.SimplifyIfElseFollowChain();
-            irfun.EliminateDeadAssignments(true);
-            //irfun.PerformExpressionPropagation();
+            irfun.EliminateDeadAssignments(false);
+            //irfun.PerformExpressionPropagation(false);
             irfun.VerifyLivenessNoInterference();
 
             // Convert out of SSA and rename variables
@@ -1540,7 +1540,7 @@ namespace luadec
             irfun.DetectLoopConditionals();
             irfun.DetectTwoWayConditionals();
             irfun.SimplifyIfElseFollowChain();
-            irfun.EliminateDeadAssignments(true);
+            irfun.EliminateDeadAssignments(false);
             irfun.PerformExpressionPropagation(false);
             irfun.VerifyLivenessNoInterference();
 
@@ -2196,7 +2196,7 @@ namespace luadec
             irfun.DetectLoopConditionals();
             irfun.DetectTwoWayConditionals();
             irfun.SimplifyIfElseFollowChain();
-            irfun.EliminateDeadAssignments(true);
+            irfun.EliminateDeadAssignments(false);
             irfun.PerformExpressionPropagation(false);
             //irfun.VerifyLivenessNoInterference();
 
